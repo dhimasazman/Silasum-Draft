@@ -1,25 +1,25 @@
-// URL Web App Google Apps Script Anda
+// URL Web App Google Apps Script
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxHjU1itJjBNQJQPlNUEAaM85Lcf8pFcMlvJd6MZowix2zNNPgC3njbrxyIakTl-7BT/exec";
 
-// Variabel PWA Install Prompt
-let deferredPrompt;
-
 document.addEventListener("DOMContentLoaded", () => {
-  // Set tanggal hari ini
+  // Set tanggal hari ini secara otomatis
   const today = new Date();
   document.getElementById("tanggal").valueAsDate = today;
 
-  // Render nilai default awal ke infografis
-  updateInfographicValues();
+  // Navigasi Tab
+  initTabs();
 
-  // Listener input otomatis update ke infografis
+  // Listener input untuk update otomatis ke infografis & indikator ringkasan
   document.getElementById("wbpForm").addEventListener("input", updateInfographicValues);
 
-  // Event listener tombol terpisah
+  // Listener Tombol
   document.getElementById("btnSave").addEventListener("click", handleSaveToSpreadsheet);
   document.getElementById("btnDownload").addEventListener("click", handleDownloadImage);
 
-  // Register PWA Service Worker
+  // Inisialisasi perhitungan awal
+  updateInfographicValues();
+
+  // Register PWA Service Worker jika didukung
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("sw.js")
       .then(reg => console.log("Service Worker terdaftar:", reg))
@@ -27,51 +27,22 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-// EVENT POP-UP PROMPT INSTALL PWA UNTUK SMARTPHONE
-window.addEventListener("beforeinstallprompt", (e) => {
-  // Cegah browser memunculkan mini-infobar bawaan
-  e.preventDefault();
-  deferredPrompt = e;
+// Sistem Navigasi Tab
+function initTabs() {
+  const tabs = document.querySelectorAll(".tab-btn");
+  tabs.forEach(tab => {
+    tab.addEventListener("click", () => {
+      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+      document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
 
-  // Tampilkan modal / banner promosi install aplikasi
-  showInstallPromotion();
-});
-
-function showInstallPromotion() {
-  // Cegah duplikasi jika modal sudah ada
-  if (document.getElementById("installModal")) return;
-
-  const installModal = document.createElement("div");
-  installModal.id = "installModal";
-  installModal.innerHTML = `
-    <div style="position: fixed; bottom: 20px; left: 20px; right: 20px; background: #0d2b45; color: white; padding: 15px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); z-index: 9999; display: flex; justify-content: space-between; align-items: center;">
-      <div>
-        <strong style="font-size: 14px;">Install Silasum</strong>
-        <p style="font-size: 11px; margin-top: 2px; color: #cbd5e0;">Pasang aplikasi di layar utama HP Anda</p>
-      </div>
-      <div style="display: flex; gap: 8px; align-items: center;">
-        <button id="btnInstallPWA" style="background: #16a34a; color: white; border: none; padding: 8px 12px; border-radius: 6px; font-weight: bold; font-size: 12px; cursor: pointer;">Install</button>
-        <button id="btnClosePWA" style="background: transparent; color: white; border: none; font-size: 16px; cursor: pointer; padding: 0 4px;">✕</button>
-      </div>
-    </div>
-  `;
-  document.body.appendChild(installModal);
-
-  document.getElementById("btnInstallPWA").addEventListener("click", async () => {
-    installModal.remove();
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      console.log(`Pilihan user: ${outcome}`);
-      deferredPrompt = null;
-    }
-  });
-
-  document.getElementById("btnClosePWA").addEventListener("click", () => {
-    installModal.remove();
+      tab.classList.add("active");
+      const targetId = tab.getAttribute("data-tab");
+      document.getElementById(targetId).classList.add("active");
+    });
   });
 }
 
+// Format Tanggal Bahasa Indonesia
 function formatDateIndonesian(dateString) {
   if (!dateString) return "-";
   const options = { weekday: 'long', year: 'numeric', month: 'long', day: '2-digit' };
@@ -79,10 +50,23 @@ function formatDateIndonesian(dateString) {
   return date.toLocaleDateString('id-ID', options);
 }
 
+// Toast Notifikasi Sederhana
+function showToast(message, type = "info") {
+  const toast = document.getElementById("toast");
+  toast.innerText = message;
+  toast.style.borderColor = type === "error" ? "#ef4444" : type === "success" ? "#22c55e" : "#3b82f6";
+  toast.style.display = "block";
+
+  setTimeout(() => {
+    toast.style.display = "none";
+  }, 3500);
+}
+
+// Update Nilai Infografis & Ringkasan Stats
 function updateInfographicValues() {
-  // Hitung total Register A & B
   let totalRegA = 0;
   document.querySelectorAll(".regA").forEach(el => totalRegA += Number(el.value || 0));
+  
   let totalRegB = 0;
   document.querySelectorAll(".regB").forEach(el => totalRegB += Number(el.value || 0));
 
@@ -131,19 +115,49 @@ function updateInfographicValues() {
   document.getElementById("out-tanggal").innerText = formatDateIndonesian(rawDate);
 
   mappings.forEach(item => {
-    const val = document.getElementById(item.in).value || 0;
-    document.getElementById(item.out).innerText = val;
+    const inputEl = document.getElementById(item.in);
+    const outEl = document.getElementById(item.out);
+    if (inputEl && outEl) {
+      outEl.innerText = inputEl.value || 0;
+    }
   });
 
   document.getElementById("out-totalRegA").innerText = totalRegA;
   document.getElementById("out-totalRegB").innerText = totalRegB;
+
+  // Update Ringkasan Stat Atas
+  const kap = Number(document.getElementById("kapasitas").value || 1);
+  const penghuni = Number(document.getElementById("jumlahPenghuni").value || 0);
+  const persen = Math.round((penghuni / kap) * 100);
+
+  document.getElementById("card-kapasitas").innerText = kap;
+  document.getElementById("card-penghuni").innerText = penghuni;
+  document.getElementById("card-persen").innerText = persen + "%";
+
+  const badge = document.getElementById("card-status-badge");
+  if (persen > 100) {
+    badge.innerText = "Overkapasitas";
+    badge.style.color = "#dc2626";
+  } else if (persen >= 85) {
+    badge.innerText = "Waspada";
+    badge.style.color = "#d97706";
+  } else {
+    badge.innerText = "Normal";
+    badge.style.color = "#16a34a";
+  }
 }
 
-// FUNGSI SIMPAN KE SPREADSHEET
+// Simpan ke Spreadsheet
+// SIMPAN KE SPREADSHEET (INTERAKTIF)
 async function handleSaveToSpreadsheet() {
   const btn = document.getElementById("btnSave");
-  btn.innerText = "⏳ Menyimpan...";
+  const icon = btn.querySelector(".btn-icon");
+  const text = btn.querySelector(".btn-text");
+
+  // State: Loading
   btn.disabled = true;
+  icon.innerHTML = '<span class="spinner"></span>';
+  text.innerText = "Menyimpan Data...";
 
   try {
     const inputs = document.querySelectorAll("input");
@@ -159,27 +173,42 @@ async function handleSaveToSpreadsheet() {
       body: JSON.stringify(formData)
     });
 
-    alert("✅ Data berhasil dikirim dan disimpan ke Google Spreadsheet!");
+    // State: Sukses Berhasil
+    btn.classList.add("btn-state-success");
+    icon.innerText = "✓";
+    text.innerText = "Berhasil Disimpan!";
+    showToast("✅ Data berhasil dikirim ke Google Spreadsheet!", "success");
+
   } catch (err) {
-    alert("❌ Gagal menyimpan data: " + err.message);
+    showToast("❌ Gagal menyimpan data: " + err.message, "error");
   } finally {
-    btn.innerText = "📊 Simpan ke Spreadsheet";
-    btn.disabled = false;
+    // Kembalikan ke state semula setelah 2.5 detik
+    setTimeout(() => {
+      btn.disabled = false;
+      btn.classList.remove("btn-state-success");
+      icon.innerText = "💾";
+      text.innerText = "Simpan ke Spreadsheet";
+    }, 2500);
   }
 }
 
-// FUNGSI UNDUH GAMBAR INFOGRAFIS
+// UNDUH GAMBAR INFOGRAFIS (INTERAKTIF)
 async function handleDownloadImage() {
   const btn = document.getElementById("btnDownload");
-  btn.innerText = "⏳ Memproses Gambar...";
+  const icon = btn.querySelector(".btn-icon");
+  const text = btn.querySelector(".btn-text");
+
+  // State: Loading
   btn.disabled = true;
+  icon.innerHTML = '<span class="spinner"></span>';
+  text.innerText = "Memproses Gambar...";
 
   try {
     updateInfographicValues();
 
     const captureArea = document.getElementById("capture-area");
     
-    // Pastikan semua gambar di dalam captureArea selesai dimuat
+    // Pastikan semua gambar selesai dimuat
     const images = captureArea.getElementsByTagName("img");
     for (let img of images) {
       if (!img.complete) {
@@ -193,17 +222,72 @@ async function handleDownloadImage() {
     const canvas = await html2canvas(captureArea, { 
       scale: 2,
       logging: false,
-      allowTaint: false, // Ubah ke false agar tidak memicu error tainted canvas
-      useCORS: true       // Aktifkan CORS jika gambar diambil dari domain lain
+      allowTaint: false,
+      useCORS: true
     });
     
     const link = document.createElement("a");
     const dateVal = document.getElementById("tanggal").value || "Laporan";
-    link.download = `Laporan Harian WBP ${dateVal}.png`;
+    link.download = `Laporan_Harian_WBP_${dateVal}.png`;
     link.href = canvas.toDataURL("image/png");
     link.click();
+
+    // State: Sukses Unduh
+    btn.classList.add("btn-state-success");
+    icon.innerText = "✓";
+    text.innerText = "Gambar Diunduh!";
+    showToast("🖼️ Gambar infografis berhasil diunduh!", "success");
+
   } catch (err) {
-    alert("❌ Gagal mengunduh gambar: " + err.message);
+    showToast("❌ Gagal mengunduh gambar: " + err.message, "error");
+  } finally {
+    // Kembalikan ke state semula setelah 2.5 detik
+    setTimeout(() => {
+      btn.disabled = false;
+      btn.classList.remove("btn-state-success");
+      icon.innerText = "🖼️";
+      text.innerText = "Unduh Gambar Infografis";
+    }, 2500);
+  }
+}
+
+// Unduh Gambar Infografis
+async function handleDownloadImage() {
+  const btn = document.getElementById("btnDownload");
+  btn.innerText = "⏳ Memproses Gambar...";
+  btn.disabled = true;
+
+  try {
+    updateInfographicValues();
+
+    const captureArea = document.getElementById("capture-area");
+    
+    // Pastikan gambar selesai dimuat sebelum merender canvas
+    const images = captureArea.getElementsByTagName("img");
+    for (let img of images) {
+      if (!img.complete) {
+        await new Promise((resolve) => {
+          img.onload = resolve;
+          img.onerror = resolve;
+        });
+      }
+    }
+
+    const canvas = await html2canvas(captureArea, { 
+      scale: 2,
+      logging: false,
+      allowTaint: false,
+      useCORS: true
+    });
+    
+    const link = document.createElement("a");
+    const dateVal = document.getElementById("tanggal").value || "Laporan";
+    link.download = `Laporan_Harian_WBP_${dateVal}.png`;
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+    showToast("🖼️ Gambar infografis berhasil diunduh!", "success");
+  } catch (err) {
+    showToast("❌ Gagal mengunduh gambar: " + err.message, "error");
   } finally {
     btn.innerText = "🖼️ Unduh Gambar Infografis";
     btn.disabled = false;
