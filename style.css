@@ -2,142 +2,269 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
-  background-color: #f4f6f9;
-  color: #333;
-  padding-bottom: 30px;
+  background-color: #f1f5f9;
+  color: #1e293b;
+  padding-bottom: 40px;
+}
+
+/* Toast Notifikasi */
+.toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: #0f172a;
+  color: #ffffff;
+  padding: 12px 20px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: none;
+  z-index: 10000;
+  border-left: 4px solid #3b82f6;
 }
 
 .app-container {
-  max-width: 650px;
-  margin: 20px auto;
-  padding: 0 15px;
+  max-width: 780px;
+  margin: 24px auto;
+  padding: 0 16px;
 }
 
-/* Header Form Aplikasi */
+/* Header Kedinasan Resmi */
 .app-header {
   background-color: #0d2b45;
-  color: white;
-  padding: 15px 20px;
-  border-radius: 10px;
+  color: #ffffff;
+  padding: 20px 24px;
+  border-radius: 8px;
   margin-bottom: 20px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(13, 43, 69, 0.15);
 }
 
-.header-left-content {
+.header-brand {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 16px;
 }
 
 .logo-group {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 
 .header-logo {
-  width: 36px;
-  height: 36px;
+  width: 42px;
+  height: 42px;
   object-fit: contain;
 }
 
-.header-text-content {
-  text-align: left;
+.header-titles h1 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  margin-bottom: 2px;
 }
 
-.header-text-content h1 {
-  font-size: 1.15rem;
-  margin-bottom: 3px;
+.header-titles p {
+  font-size: 0.85rem;
+  color: #94a3b8;
 }
 
-.header-text-content p {
-  font-size: 0.8rem;
-  color: #cbd5e0;
+.header-badge {
+  background-color: #1e3a5f;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  color: #cbd5e1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
 }
 
-/* Kartu Form Input */
-.form-card {
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+.header-badge .dot {
+  width: 8px;
+  height: 8px;
+  background-color: #22c55e;
+  border-radius: 50%;
 }
 
-.form-section {
-  margin-bottom: 25px;
-  border-bottom: 1px solid #edf2f7;
-  padding-bottom: 15px;
+/* Ringkasan Statistik */
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
 }
 
-.form-section h3 {
+@media (max-width: 600px) {
+  .summary-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.card-stat {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  color: #64748b;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.stat-value {
+  font-size: 1.25rem;
+  font-weight: 700;
   color: #0d2b45;
-  margin-bottom: 15px;
-  font-size: 1.1rem;
-  border-left: 4px solid #0d2b45;
-  padding-left: 10px;
+  margin-top: 4px;
 }
 
-.form-section h4 {
-  color: #4a5568;
-  margin: 10px 0;
-  font-size: 0.95rem;
+.stat-status {
+  display: inline-block;
+  margin-top: 4px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #16a34a;
+}
+
+/* Form Utama */
+.main-card {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* Navigasi Tab Modern Flat */
+.tab-nav {
+  display: flex;
+  gap: 4px;
+  border-bottom: 2px solid #e2e8f0;
+  margin-bottom: 20px;
+  overflow-x: auto;
+}
+
+.tab-btn {
+  background: none;
+  border: none;
+  padding: 10px 16px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  white-space: nowrap;
+}
+
+.tab-btn.active {
+  color: #0d2b45;
+  border-bottom-color: #0d2b45;
+}
+
+.tab-btn:hover {
+  color: #1e293b;
+}
+
+/* Konten Tab */
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
 }
 
 .form-grid-2 {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  gap: 20px;
 }
 
-@media (max-width: 500px) {
-  .form-grid-2 {
+.form-grid-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 600px) {
+  .form-grid-2, .form-grid-3 {
     grid-template-columns: 1fr;
   }
+}
+
+.sub-section {
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+.sub-section h4 {
+  font-size: 0.92rem;
+  color: #0d2b45;
+  margin-bottom: 12px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #cbd5e1;
 }
 
 .form-group {
   margin-bottom: 12px;
 }
 
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+
 .form-group label {
   display: block;
-  font-size: 0.85rem;
-  margin-bottom: 5px;
-  color: #4a5568;
-  font-weight: bold;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 4px;
 }
 
 .form-group input {
   width: 100%;
-  padding: 10px 12px;
-  border: 1px solid #cbd5e0;
-  border-radius: 6px;
-  font-size: 0.95rem;
+  padding: 8px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  color: #0f172a;
+  background-color: #ffffff;
 }
 
 .form-group input:focus {
   outline: none;
   border-color: #0d2b45;
-}
-
-hr {
-  border: none;
-  border-top: 1px solid #e2e8f0;
-  margin: 15px 0;
+  box-shadow: 0 0 0 2px rgba(13, 43, 69, 0.1);
 }
 
 /* Tombol Aksi */
 .form-actions {
   display: flex;
   gap: 12px;
-  margin-top: 20px;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid #e2e8f0;
 }
 
-@media (max-width: 500px) {
+@media (max-width: 600px) {
   .form-actions {
     flex-direction: column;
   }
@@ -145,11 +272,11 @@ hr {
 
 .btn {
   flex: 1;
-  padding: 12px 16px;
+  padding: 11px 16px;
   border: none;
-  border-radius: 8px;
-  font-weight: bold;
-  font-size: 0.95rem;
+  border-radius: 6px;
+  font-size: 0.88rem;
+  font-weight: 600;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -158,21 +285,47 @@ hr {
 }
 
 .btn:disabled {
-  background-color: #a0aec0 !important;
+  background-color: #94a3b8 !important;
   cursor: not-allowed;
 }
 
 .btn-primary {
   background-color: #0d2b45;
-  color: white;
+  color: #ffffff;
+}
+
+.btn-primary:hover {
+  background-color: #0a2238;
 }
 
 .btn-success {
-  background-color: #16a34a;
-  color: white;
+  background-color: #15803d;
+  color: #ffffff;
 }
 
-/* CANVAS INFOGRAFIS (DESAIN HASIL DOWLOAD) */
+.btn-success:hover {
+  background-color: #166534;
+}
+
+.btn-secondary {
+  background-color: #475569;
+  color: #ffffff;
+}
+
+.btn-secondary:hover {
+  background-color: #334155;
+}
+
+/* Footer Aplikasi */
+.app-footer {
+  text-align: center;
+  margin-top: 24px;
+  font-size: 0.8rem;
+  color: #64748b;
+  line-height: 1.5;
+}
+
+/* CANVAS INFOGRAFIS CETAK */
 #capture-area-wrapper {
   position: absolute;
   left: -9999px;
@@ -182,19 +335,19 @@ hr {
 .infographic-container {
   width: 750px;
   background-color: #ffffff;
-  padding: 20px;
+  padding: 24px;
   color: #0d2b45;
   box-sizing: border-box;
 }
 
 .info-header {
   background-color: #0d2b45;
-  color: white;
-  padding: 15px 20px;
+  color: #ffffff;
+  padding: 16px 20px;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  gap: 15px;
+  gap: 16px;
+  border-radius: 4px;
 }
 
 .logo-group-info {
@@ -204,168 +357,150 @@ hr {
 }
 
 .info-logo {
-  width: 45px;
-  height: 45px;
+  width: 44px;
+  height: 44px;
   object-fit: contain;
 }
 
-.header-text {
-  text-align: left;
-}
-
 .header-text h2 {
-  font-size: 1.6rem;
-  letter-spacing: 1px;
+  font-size: 1.35rem;
+  letter-spacing: 0.5px;
   margin-bottom: 2px;
 }
 
 .header-text p {
-  font-size: 0.85rem;
-  color: #cbd5e0;
+  font-size: 0.8rem;
+  color: #cbd5e1;
 }
 
 .info-date-bar {
-  font-weight: bold;
-  font-size: 1.2rem;
-  margin: 15px 0;
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin: 16px 0;
   color: #0d2b45;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #0d2b45;
 }
 
 .top-stats-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 10px;
-  margin-bottom: 15px;
+  margin-bottom: 16px;
 }
 
 .stat-box {
   border: 2px solid #0d2b45;
-  border-radius: 8px;
+  border-radius: 6px;
   overflow: hidden;
   text-align: center;
 }
 
 .stat-head {
   background-color: #0d2b45;
-  color: white;
-  font-size: 0.75rem;
-  font-weight: bold;
-  padding: 8px 4px;
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 6px 4px;
 }
 
 .stat-val {
-  padding: 12px 5px;
-  font-weight: bold;
+  padding: 10px 4px;
+  font-weight: 700;
   font-size: 0.95rem;
 }
 
 .info-body-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 15px;
+  gap: 16px;
 }
 
 .card-box {
-  border: 2px solid #0d2b45;
-  border-radius: 10px;
+  border: 1.5px solid #0d2b45;
+  border-radius: 6px;
   overflow: hidden;
-  margin-bottom: 15px;
+  margin-bottom: 14px;
 }
 
 .card-header {
   background-color: #0d2b45;
-  color: white;
-  font-weight: bold;
-  font-size: 0.85rem;
-  padding: 10px 12px;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.8rem;
+  padding: 8px 12px;
+  letter-spacing: 0.5px;
 }
 
 .card-body {
-  padding: 12px;
-  font-size: 0.85rem;
+  padding: 10px;
+  font-size: 0.82rem;
 }
 
 .row-flex {
   display: flex;
-  gap: 10px;
+  gap: 8px;
 }
 
 .sub-table {
   flex: 1;
   border: 1px solid #0d2b45;
-  border-radius: 6px;
+  border-radius: 4px;
   overflow: hidden;
 }
 
 .sub-header {
-  background-color: #b8cbe1;
+  background-color: #cbd5e1;
+  color: #0d2b45;
   text-align: center;
-  font-weight: bold;
-  padding: 6px;
-  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 5px;
+  font-size: 0.75rem;
 }
 
-/* PERATAN PRESISI (CSS GRID 4 KOLOM) */
 .list-rows {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  padding: 10px 14px;
+  gap: 4px;
+  padding: 6px 8px;
 }
 
 .sub-row {
   display: grid;
-  grid-template-columns: 1fr 15px 50px 45px;
+  grid-template-columns: 1fr 12px 40px 42px;
   align-items: center;
-  font-size: 0.82rem;
-  line-height: 1.4;
+  font-size: 0.8rem;
 }
 
 .sub-row > span:nth-child(1) { text-align: left; color: #0d2b45; }
-.sub-row > span:nth-child(2) { text-align: center; font-weight: bold; color: #0d2b45; }
-.sub-row > span:nth-child(3) { text-align: right; font-weight: bold; padding-right: 5px; color: #0d2b45; }
-.sub-row > span:nth-child(4) { text-align: left; color: #0d2b45; }
+.sub-row > span:nth-child(2) { text-align: center; font-weight: 700; }
+.sub-row > span:nth-child(3) { text-align: right; font-weight: 700; padding-right: 4px; }
+.sub-row > span:nth-child(4) { text-align: left; color: #475569; }
 
 .sub-table .sub-row {
-  grid-template-columns: 1fr 12px 35px 38px;
-  padding: 3px 6px;
-  font-size: 0.78rem;
+  padding: 3px 4px;
 }
 
 .sub-footer {
   background-color: #0d2b45;
-  color: white;
+  color: #ffffff;
   display: grid;
-  grid-template-columns: 1fr 12px 35px 38px;
+  grid-template-columns: 1fr 12px 40px 42px;
   align-items: center;
-  padding: 6px;
-  font-weight: bold;
-  font-size: 0.8rem;
+  padding: 5px;
+  font-weight: 700;
+  font-size: 0.78rem;
 }
 
-/* STYLING FOOTER */
-
-/* Footer Form Web */
-.app-footer {
-  text-align: center;
-  margin-top: 20px;
-  padding: 10px;
-  font-size: 0.85rem;
-  color: #718096;
-  font-weight: 500;
+.sub-footer > span {
+  color: #ffffff !important;
 }
 
-/* Footer Infografis Hasil Gambar */
 .info-footer {
   text-align: center;
-  margin-top: 15px;
-  padding-top: 10px;
-  border-top: 1px dashed #cbd5e0;
-  font-size: 0.75rem;
-  color: #4a5568;
-  font-weight: bold;
-  letter-spacing: 0.5px;
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px dashed #cbd5e1;
+  font-size: 0.78rem;
+  color: #475569;
 }
-
-.sub-footer > span { color: white !important; }
-.font-bold > span { font-weight: bold; }
