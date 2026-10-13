@@ -178,11 +178,23 @@ async function handleDownloadImage() {
     updateInfographicValues();
 
     const captureArea = document.getElementById("capture-area");
+    
+    // Pastikan semua gambar di dalam captureArea selesai dimuat
+    const images = captureArea.getElementsByTagName("img");
+    for (let img of images) {
+      if (!img.complete) {
+        await new Promise((resolve) => {
+          img.onload = resolve;
+          img.onerror = resolve;
+        });
+      }
+    }
+
     const canvas = await html2canvas(captureArea, { 
       scale: 2,
       logging: false,
-      allowTaint: true,
-      useCORS: false
+      allowTaint: false, // Ubah ke false agar tidak memicu error tainted canvas
+      useCORS: true       // Aktifkan CORS jika gambar diambil dari domain lain
     });
     
     const link = document.createElement("a");
